@@ -78,4 +78,11 @@ export class GainsComponent implements OnInit, AfterViewInit {
     this.summaryKPIs.totalGain =
       gains.reduce((total, item: Gain) => total + item.gain, 0) / 1000;
   }
+
+  getColorCode(row : any) {
+    return {
+      nafaa: row.cagr > 0.25 && row.duration_days > 365,
+      nuksaan: row.gain_percent < -0.08,
+    };
+  }
 }

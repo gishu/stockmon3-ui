@@ -159,4 +159,11 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
     }
     return value.decimalPlaces(2).toNumber();
   }
+
+  getColorCode(row : any) {
+    return {
+      nafaa: row.unrealizedGain > 50000, //&& row.ageInYears > 0,
+      nuksaan: row.unrealizedGain < -25000,
+    };
+  }
 }

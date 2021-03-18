@@ -69,7 +69,7 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="gridColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: gridColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: gridColumns" [ngClass]="getColorCode(row)"></tr>
     </table>
   </mat-card-content>
 </mat-card>

@@ -83,14 +83,14 @@
           </ng-container>
 
           <ng-container matColumnDef="durationDays">
-            <th mat-header-cell *matHeaderCellDef>CAGR %</th>
+            <th mat-header-cell *matHeaderCellDef>Days</th>
             <td mat-cell *matCellDef="let row">
               {{ row.duration_days | number: "1.0-0" }}
             </td>
           </ng-container>
   
         <tr mat-header-row *matHeaderRowDef="gridColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: gridColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: gridColumns" [ngClass]="getColorCode(row)"></tr>
       </table>
     </mat-card-content>
   </mat-card>
