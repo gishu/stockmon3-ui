@@ -1,0 +1,46 @@
+/* width */
+.mat-table {
+  width: 100%;
+}
+
+/*
+.mat-column-stock {
+  flex: 1 0 80px;
+}
+.mat-column-quantity {
+  flex: 0 0 50px;
+}
+.mat-column-avgPrice,
+.mat-column-cmp,
+.mat-column-unrealizedGain {
+  flex: 0 0 100px;
+}
+*/
+
+/* right align numeric columns */
+.mat-cell.mat-column-quantity,
+.mat-cell.mat-column-costPrice,
+.mat-cell.mat-column-cmp,
+.mat-cell.mat-column-unrealizedGain {
+  text-align: right;
+}
+
+/* center column headers */
+th.mat-header-cell {
+  text-align: center;
+}
+
+/* space out the columns */
+td.mat-cell{
+  padding: 0px 10px;
+}
+
+/* right align the chips */
+.spacer{
+  flex: 1 0 auto;
+}
+
+/* space out the chips and the grid */
+div.mat-card-header {
+  margin: 0 0 10px 0;
+}

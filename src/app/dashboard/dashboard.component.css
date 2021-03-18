@@ -1,3 +1,7 @@
-tr > td.numeric { 
-    text-align: right;
+.mat-tab-group {
+  margin-bottom: 48px;
+}
+
+.mat-form-field {
+  padding: 0px 20px;
 }

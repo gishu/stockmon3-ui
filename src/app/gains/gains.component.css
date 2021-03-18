@@ -1,0 +1,36 @@
+/* width */
+.mat-table {
+  width: 100%;
+}
+
+/* center column headers */
+th.mat-header-cell {
+  text-align: center;
+}
+
+/* space out the columns */
+td.mat-cell {
+  padding: 0px 10px;
+}
+
+/* right align numeric columns */
+.mat-cell.mat-column-quantity,
+.mat-cell.mat-column-costPrice,
+.mat-cell.mat-column-salePrice,
+.mat-cell.mat-column-TCO,
+.mat-cell.mat-column-gain,
+.mat-cell.mat-column-gainPercent,
+.mat-cell.mat-column-cagr,
+.mat-cell.mat-column-durationDays {
+  text-align: right;
+}
+
+/* right align the chips */
+.spacer {
+  flex: 1 0 auto;
+}
+
+/* space out the chips and the grid */
+div.mat-card-header {
+  margin: 0 0 10px 0;
+}
