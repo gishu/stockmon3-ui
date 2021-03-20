@@ -2,11 +2,16 @@ import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/cor
 
 import { StockmonService } from '../stockmon.service';
 import { HoldingSummary } from '../viewModel/holdingSummary';
+import { asPercent } from '../utilities'
 
 import { BigNumber } from 'bignumber.js';
 import * as _ from 'lodash';
+import * as moment from 'moment';
+
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
+
+import { asCurrency } from "../utilities";
 
 @Component({
   selector: 'mx-holdings',
@@ -24,7 +29,9 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
     'quantity',
     'costPrice',
     'cmp',
+    'tco',
     'unrealizedGain',
+    'gainPercent'
   ];
   holdingsColumns: string[] = [
     'date',
@@ -34,6 +41,9 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
     'cmp',
     'unrealizedGain',
     'notes',
+    'gainPercent',
+    'cagr',
+    'age'
   ];
 
   holdingGroupings : string[] = ["None", "Stock"];
@@ -90,51 +100,79 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
             let info = holdings[stock],
               costPrice = new BigNumber(info['avg-price']),
               marketPrice = new BigNumber(quotes[stock]),
-              gain = marketPrice.minus(costPrice);
+              gain = marketPrice.minus(costPrice),
+              gainPercent = 0;
+
+            if (info['avg-price'] > 0){
+              gainPercent = asPercent(marketPrice.minus(costPrice).div(costPrice));
+              
+            }
+
             return {
               stock: stock,
               quantity: info['total-qty'],
-              averagePrice: this.asCurrency(costPrice),
-              cmp: this.asCurrency(marketPrice),
-              unrealizedGain: this.asCurrency(
+              averagePrice: asCurrency(costPrice),
+              cmp: asCurrency(marketPrice),
+              tco: asCurrency( costPrice.times(info['total-qty']).div(1000) ),
+              unrealizedGain: asCurrency(
                 gain.times(new BigNumber(info['total-qty']).div(1000))
               ),
+              gainPercent: gainPercent
             };
           });
 
+          // summary kpi 
           let totalCost = new BigNumber(0),
-            totalGain = new BigNumber(0);
+            totalGain = new BigNumber(0),
+            today = moment();
 
           this.holdings = _.chain(stocks)
             .flatMap((stock) => {
               let stockInfo = holdings[stock];
+              
               return _.map(stockInfo['buys'], (h) => {
+                
                 let costPrice = new BigNumber(h['price']),
                   marketPrice = new BigNumber(quotes[stock]),
                   qty = new BigNumber(h['qty']),
                   gain = marketPrice
                     .minus(costPrice)
-                    .times(qty);
+                    .times(qty),
+                  gainPercent = 0,
+                  cagr = 0,
+                  ageInDays = today.diff( moment(h['date']), 'days');
 
                 totalCost = totalCost.plus(costPrice.times(qty));
                 totalGain = totalGain.plus(gain);
+
+
+                if (h.price > 0) {
+                  gainPercent = asPercent(new BigNumber(quotes[stock]).minus(h.price).div(h.price));
+                }
+          
+                if ((h.price > 0) && (ageInDays > 30)) {
+                  cagr = asPercent( this._getCagr(quotes[stock], h.price, ageInDays / 365) );
+                }
 
                 return {
                   date: h['date'],
                   stock: stock,
                   quantity: h['qty'],
-                  averagePrice: this.asCurrency(costPrice),
-                  cmp: this.asCurrency(marketPrice),
-                  unrealizedGain: this.asCurrency(gain),
+                  averagePrice: asCurrency(costPrice),
+                  cmp: asCurrency(marketPrice),
+                  unrealizedGain: asCurrency(gain.div(1000)),
                   notes: h['notes'],
+                  age: ageInDays,
+                  gainPercent: gainPercent,
+                  cagr: cagr
                 };
               });
             })
             .value();
 
           this.holdingKPIs = {
-            totalCost: this.asCurrency(totalCost.div(1000)),
-            totalGain: this.asCurrency(totalGain.div(1000)),
+            totalCost: asCurrency(totalCost.div(1000)),
+            totalGain: asCurrency(totalGain.div(1000)),
           };
 
           this.onGroupingChange("None");
@@ -144,7 +182,14 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
       .catch((err) => console.log);
   }
 
+  private _getCagr(curPrice : number, costPrice : number, ageInYears : number) {
+    let cagr = Math.pow(new BigNumber(curPrice).div(costPrice).toNumber(), (1 / ageInYears)) - 1;
+    return new BigNumber(cagr.toPrecision(10));
+  }
+
   onGroupingChange(grouping : string){
+    this.selectedGrouping = grouping;
+
     if (grouping === "Stock"){
       this.gridData = new MatTableDataSource( this.holdingsGroupedByStock );
       this.gridColumns = this.holdingsSummaryColumns;
@@ -156,20 +201,16 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
 
   }
 
-  asCurrency(number: any) {
-    let value: BigNumber;
-    if (!(number instanceof BigNumber)) {
-      value = new BigNumber(number);
-    } else {
-      value = number;
-    }
-    return value.decimalPlaces(2).toNumber();
-  }
-
   getColorCode(row : any) {
+    if (this.selectedGrouping === "Stock")
     return {
-      nafaa: row.unrealizedGain > 50000, //&& row.ageInYears > 0,
-      nuksaan: row.unrealizedGain < -25000,
-    };
+      nafaa: row.gainPercent > 0.5,
+      nuksaan: row.gainPercent < -0.25
+    }
+    else
+    return {
+        nafaa: row.cagr > 0.25,
+        nuksaan: row.cagr < -0.15 && row.age > 90,
+      };
   }
 }

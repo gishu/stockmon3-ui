@@ -21,7 +21,10 @@
 .mat-cell.mat-column-quantity,
 .mat-cell.mat-column-costPrice,
 .mat-cell.mat-column-cmp,
-.mat-cell.mat-column-unrealizedGain {
+.mat-cell.mat-column-tco,
+.mat-cell.mat-column-unrealizedGain,
+.mat-cell.mat-column-gainPercent
+ {
   text-align: right;
 }
 
