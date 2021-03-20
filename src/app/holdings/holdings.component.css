@@ -28,18 +28,24 @@
 /* center column headers */
 th.mat-header-cell {
   text-align: center;
+  justify-content: center;
+}
+
+:host ::ng-deep .mat-sort-header-container {
+  display: flex;
+  justify-content: center;
 }
 
 /* space out the columns */
-td.mat-cell{
+td.mat-cell {
   padding: 0px 10px;
 }
-tr.mat-row{
+tr.mat-row {
   height: 32px;
 }
 
 /* right align the chips */
-.spacer{
+.spacer {
   flex: 1 0 auto;
 }
 
@@ -52,10 +58,10 @@ div.mat-card-header {
 .mat-row.nuksaan {
   background-color: rgba(255, 160, 122, 0.15);
 }
-.mat-row.nuksaan > .mat-cell{
+.mat-row.nuksaan > .mat-cell {
   color: red;
 }
 
-.mat-row.nafaa{
+.mat-row.nafaa {
   background-color: rgba(144, 238, 144, 0.24);
 }

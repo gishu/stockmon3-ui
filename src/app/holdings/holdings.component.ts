@@ -1,10 +1,12 @@
-import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/core';
 
 import { StockmonService } from '../stockmon.service';
 import { HoldingSummary } from '../viewModel/holdingSummary';
 
 import { BigNumber } from 'bignumber.js';
 import * as _ from 'lodash';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'mx-holdings',
@@ -34,11 +36,13 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
     'notes',
   ];
 
-  holdingGroupings : string[] = ["None", "Month"];
+  holdingGroupings : string[] = ["None", "Stock"];
   selectedGrouping = this.holdingGroupings[0];
 
   gridColumns :string[] = [];
-  gridData : any[] =  [];
+  gridData : any;
+  @ViewChild(MatSort) sort: MatSort;
+
 
   holdingKPIs: { totalCost: number; totalGain: number } = {totalCost: 1, totalGain:0};
   holdingsGroupedByStock: { stock: string; quantity: any; averagePrice: number; cmp: number; unrealizedGain: number; }[] = [];
@@ -141,13 +145,15 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
   }
 
   onGroupingChange(grouping : string){
-    if (grouping === "Month"){
-      this.gridData = this.holdingsGroupedByStock;
+    if (grouping === "Stock"){
+      this.gridData = new MatTableDataSource( this.holdingsGroupedByStock );
       this.gridColumns = this.holdingsSummaryColumns;
     } else {
-      this.gridData = this.holdings;
+      this.gridData =  new MatTableDataSource(this.holdings);
       this.gridColumns = this.holdingsColumns;
     }
+    this.gridData.sort = this.sort;
+
   }
 
   asCurrency(number: any) {

@@ -1,4 +1,13 @@
-import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  Input,
+  ViewChild,
+} from '@angular/core';
+
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 import { StockmonService } from '../stockmon.service';
 import { Gain } from '../viewModel/gain';
@@ -15,7 +24,7 @@ export class GainsComponent implements OnInit, AfterViewInit {
   private _viewLoaded: boolean = false;
   summaryKPIs: any = {};
 
-  gridData: Gain[] = [];
+  gridData: any = [];
 
   gridColumns = [
     'date',
@@ -52,6 +61,8 @@ export class GainsComponent implements OnInit, AfterViewInit {
     this.refreshGrid();
   }
 
+  @ViewChild(MatSort) sort: MatSort;
+
   constructor(private stockService: StockmonService) {}
 
   ngOnInit(): void {}
@@ -64,8 +75,11 @@ export class GainsComponent implements OnInit, AfterViewInit {
 
   refreshGrid() {
     this.stockService.getGains(this._accountId, this._year).then((gains) => {
-      this.gridData = gains;
-      this.refreshSummary(this.gridData);
+      
+      this.gridData = new MatTableDataSource(gains);
+      this.gridData.sort = this.sort;
+      
+      this.refreshSummary(gains);
     });
   }
 
@@ -79,10 +93,14 @@ export class GainsComponent implements OnInit, AfterViewInit {
       gains.reduce((total, item: Gain) => total + item.gain, 0) / 1000;
   }
 
-  getColorCode(row : any) {
+  getColorCode(row: any) {
     return {
-      nafaa: row.cagr > 0.25 && row.duration_days > 365,
+      nafaa: row.cagr > 0.25 && row.duration_days > 30,
       nuksaan: row.gain_percent < -0.08,
     };
+  }
+
+  sortData(event: any) {
+    console.log(event);
   }
 }
