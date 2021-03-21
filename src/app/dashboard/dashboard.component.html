@@ -1,74 +1,42 @@
 <div class="container">
-    <div class="row">
-        <div class="col-sm">
-            <p-dropdown [options]="years" [(ngModel)]="selectedYear" optionLabel="year" (onChange)="refreshGrid()"></p-dropdown>
-        </div>
-        <div class="col-sm">
-            <p-dropdown [options]="accounts" [(ngModel)]="selectedAccount" optionLabel="id" (onChange)="refreshGrid()"></p-dropdown>
+  <div class="row">
+    <div class="col-sm-12">
+      <mat-form-field appearance="fill">
+        <mat-label>Select account</mat-label>
+        <mat-select [(ngModel)]="selectedAccountId">
+          <mat-option *ngFor="let account of accounts" [value]="account">
+            {{ account }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-        </div>
-        <div class="col-sm"></div>
+      <mat-form-field appearance="fill">
+        <mat-label>Select year</mat-label>
+        <mat-select [(ngModel)]="selectedYear">
+          <mat-option *ngFor="let year of years" [value]="year">
+            {{ year }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
-    <div class="row">
-        <div class="col-sm">
-            <p-table #dtGains [value]="gains" [globalFilterFields]="['stock']"
-            (onFilter)="onFilter($event, dtGains)">
-                
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th colspan="4"></th>
-                        <th colspan="2"><button pButton pRipple type="button" label="{{totalTCO | currency : 'INR' }} K" class="p-button-rounded p-button-lg p-button-info"></button></th>
-                        <th colspan="2"><button pButton pRipple type="button" label="{{totalGain | currency : 'INR' }} K" class="p-button-rounded p-button-lg " [ngClass]="getButtonClass(totalGain)"></button></th>
-                        <th><button pButton pRipple type="button" label="{{totalGain/totalTCO | percent }}" class="p-button-rounded p-button-lg " [ngClass]="getButtonClass(totalGain/totalTCO)"></button></th>
-                        <th colspan="2"> </th>
-                    </tr>
-                    <tr>
-                        <th pSortableColumn="sale_date">Date <p-sortIcon field="sale_date"></p-sortIcon>
-                        </th>
-                        <th pSortableColumn="stock">Stock
-                            <p-sortIcon field="stock"></p-sortIcon>
-                            <p-columnFilter type="text" field="stock" display="menu"></p-columnFilter>
-                        </th>
-                        <th>Qty</th>
-                        <th>Cost Price</th>
-                        <th>Sale Price</th>
-                        <th>TCO</th>
-                        <th pSortableColumn="gain">Gain <p-sortIcon field="gain"></p-sortIcon>
-                        <th pSortableColumn="type">Type 
-                            <p-sortIcon field="type"></p-sortIcon>
-                            <p-columnFilter type="text" field="type" display="menu"></p-columnFilter>
-                        <th>Abs%</th>
-                        <th>CAGR</th>
-                        <th pSortableColumn="duration_days">Duration
-                            <p-sortIcon field="duration_days"></p-sortIcon>
+  </div>
+  <div class="row">
+    <div class="col-sm">
+      <mat-tab-group mat-align-tabs="start">
+        <mat-tab label="Holdings">
+          <mx-holdings
+            [accountId]="this.selectedAccountId">
+          </mx-holdings>
+        </mat-tab>
 
-                        </th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-gain>
-                    <tr>
-                        <td>{{gain.sale_date}}</td>
-                        <td>{{gain.stock}}</td>
-            
-                        <td class="numeric">{{gain.qty}}</td>
-            
-            
-                        <td class="numeric">{{gain.cost_price | currency: 'INR'}}</td>
-                        <td class="numeric">{{gain.sale_price | currency: "INR"}}</td>
-                        <td class="numeric">{{gain.qty * gain.cost_price | currency: 'INR'}}</td>
-            
-                        <td class="numeric">{{gain.gain | currency: "INR"}}</td>
-                        <td>{{gain.type}}</td>
-            
-                        <td class="numeric">{{gain.gain_percent | percent: '.2-2'}}</td>
-            
-                        <td class="numeric">{{gain.cagr | percent: '.2-2'}}</td>
-                        <td class="numeric">{{gain.duration_days}}</td>
-                    </tr>
-                </ng-template>
-            </p-table>
-        </div>
+        <mat-tab label="Gains">
+          <mx-gains
+            [accountId]="this.selectedAccountId"
+            [year]="this.selectedYear"
+          >
+          </mx-gains>
+        </mat-tab>
+      </mat-tab-group>
     </div>
+  </div>
 </div>
-
-<p>dashboard works!</p>

@@ -5,6 +5,7 @@ export interface Gain {
     cost_price: number;
     sale_price: number;
     gain: number;
+    type: string;
     gain_percent: number;
     cagr: number;
     duration_days: number;

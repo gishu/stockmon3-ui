@@ -1,0 +1,64 @@
+/* width */
+.mat-table {
+  width: 100%;
+}
+
+/* center column headers */
+th.mat-header-cell{
+  text-align: center;
+  justify-content: center;
+}
+
+:host ::ng-deep .mat-sort-header-container {
+  display: flex;
+  justify-content: center;
+}
+
+
+/* space out the columns */
+td.mat-cell {
+  padding: 0px 10px;
+}
+
+/* right align numeric columns */
+.mat-cell.mat-column-quantity,
+.mat-cell.mat-column-costPrice,
+.mat-cell.mat-column-salePrice,
+.mat-cell.mat-column-TCO,
+.mat-cell.mat-column-gain,
+.mat-cell.mat-column-gainPercent,
+.mat-cell.mat-column-cagr,
+.mat-cell.mat-column-durationDays {
+  text-align: right;
+}
+
+/* right align the chips */
+.spacer {
+  flex: 1 0 auto;
+}
+
+/* space out the chips and the grid */
+div.mat-card-header {
+  margin: 0 0 10px 0;
+}
+
+/* space out the columns */
+td.mat-cell {
+  padding: 0px 10px;
+}
+tr.mat-row {
+  height: 32px;
+}
+
+/* color code */
+
+.mat-row.nuksaan > .mat-cell {
+  color: salmon;
+}
+.mat-row.nafaa > .mat-cell {
+  color: lime;
+}
+
+/* .mat-row.nafaa {
+  background-color: rgba(144, 238, 144, 0.24);
+} */
