@@ -58,18 +58,15 @@ div.mat-card-header {
 }
 
 /* color code */
-.mat-row.nuksaan {
-  background-color: rgba(255, 160, 122, 0.15);
-}
 .mat-row.nuksaan > .mat-cell {
-  color: red;
+  color: salmon;
 }
+.mat-row.nafaa > .mat-cell {
+  color: lime;
+}
+
 
 /* space out card header fields */
 .mat-form-field {
   padding: 0px 20px 0px 0px;
-}
-
-.mat-row.nafaa {
-  background-color: rgba(144, 238, 144, 0.24);
 }

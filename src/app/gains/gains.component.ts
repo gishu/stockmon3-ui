@@ -39,6 +39,7 @@ export class GainsComponent implements OnInit, AfterViewInit {
     'cagr',
     'durationDays',
   ];
+  filterCriteria: string =  "";
 
   @Input()
   set accountId(id: number) {
@@ -79,11 +80,11 @@ export class GainsComponent implements OnInit, AfterViewInit {
       this.gridData = new MatTableDataSource(gains);
       this.gridData.sort = this.sort;
       
-      this.refreshSummary(gains);
+      this.refreshKpis(gains);
     });
   }
 
-  refreshSummary(gains: Gain[]) {
+  refreshKpis(gains: Gain[]) {
     this.summaryKPIs.totalTCO =
       gains.reduce(
         (total, item: Gain) => total + item.qty * item.cost_price,
@@ -102,5 +103,14 @@ export class GainsComponent implements OnInit, AfterViewInit {
 
   sortData(event: any) {
     console.log(event);
+  }
+
+  onFilter(){
+
+    if (this.filterCriteria.length > 0 && this.filterCriteria.length < 3)
+      return;
+
+    this.gridData.filter = this.filterCriteria.trim().toLowerCase();
+    this.refreshKpis(this.gridData.filteredData);
   }
 }

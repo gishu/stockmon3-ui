@@ -93,16 +93,6 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
     this.refreshGrid();
   }
 
-  @Input()
-  set year(year: number) {
-    this._year = year;
-    if (!this._viewLoaded) {
-      return;
-    }
-
-    this.refreshGrid();
-  }
-
   constructor(private stockService: StockmonService) {}
 
   ngAfterViewInit(): void {
