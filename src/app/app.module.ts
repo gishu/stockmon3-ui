@@ -9,6 +9,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
+import { MatInputModule } from "@angular/material/input";
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -36,6 +37,7 @@ import { GainsComponent } from './gains/gains.component';
     MatSortModule,
     MatChipsModule,
     MatSelectModule,
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent],
