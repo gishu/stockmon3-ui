@@ -24,7 +24,7 @@ export class GainsComponent implements OnInit, AfterViewInit {
   private _viewLoaded: boolean = false;
   summaryKPIs: any = {};
 
-  gridData: any = [];
+  gridData: MatTableDataSource<Gain>;
 
   gridColumns = [
     'date',
@@ -76,7 +76,9 @@ export class GainsComponent implements OnInit, AfterViewInit {
 
   refreshGrid() {
     this.stockService.getGains(this._accountId, this._year).then((gains) => {
-      
+      gains.forEach( (gain : any) => {
+        gain.type = (gain.type === "LT" ? "LONG" : "SHORT");
+      } )
       this.gridData = new MatTableDataSource(gains);
       this.gridData.sort = this.sort;
       

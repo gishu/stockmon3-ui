@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 
 import { StockmonService } from '../stockmon.service';
-import { HoldingSummary } from '../viewModel/holdingSummary';
-import { asPercent } from '../utilities';
+import { HoldingSummary, Holding } from '../viewModel/holdingSummary';
+import { asPercent, asCurrency } from '../utilities';
 
 import { BigNumber } from 'bignumber.js';
 import * as _ from 'lodash';
@@ -16,8 +16,6 @@ import * as moment from 'moment';
 
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-
-import { asCurrency } from '../utilities';
 
 @Component({
   selector: 'mx-holdings',
@@ -64,23 +62,9 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
     totalCost: 1,
     totalGain: 0,
   };
-  holdingsGroupedByStock: {
-    stock: string;
-    quantity: any;
-    averagePrice: number;
-    cmp: number;
-    unrealizedGain: number;
-  }[] = [];
-  holdings: {
-    date: any;
-    stock: string;
-    quantity: any;
-    averagePrice: number;
-    cmp: number;
-    unrealizedGain: number;
-    notes: any;
-  }[] = [];
-  filterCriteria: string = "";
+  holdingsGroupedByStock: HoldingSummary[] = [];
+  holdings: Holding[] = [];
+  filterCriteria: string = '';
 
   @Input()
   set accountId(id: number) {
@@ -202,8 +186,6 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
       .catch((err) => console.log);
   }
 
- 
-
   onGroupingChange(grouping: string) {
     this.selectedGrouping = grouping;
 
@@ -217,8 +199,6 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
     this.gridData.sort = this.sort;
     this.onFilter();
   }
-
- 
 
   onFilter() {
     if (this.filterCriteria.length > 0 && this.filterCriteria.length < 3)
@@ -269,6 +249,4 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
         nuksaan: row.cagr < -0.15 && row.age > 90,
       };
   }
-
-  
 }
