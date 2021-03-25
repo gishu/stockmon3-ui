@@ -10,6 +10,9 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from "@angular/material/input";
+import { MatIconModule } from "@angular/material/icon";
+
+import { MatTableExporterModule } from "mat-table-exporter";
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -37,7 +40,10 @@ import { GainsComponent } from './gains/gains.component';
     MatSortModule,
     MatChipsModule,
     MatSelectModule,
-    MatInputModule
+    MatInputModule,
+    MatIconModule,
+    MatTableExporterModule
+
   ],
   providers: [],
   bootstrap: [AppComponent],
