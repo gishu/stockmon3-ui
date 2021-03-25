@@ -43,12 +43,13 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
     'quantity',
     'costPrice',
     'cmp',
+    'tco',
     'unrealizedGain',
-    'notes',
     'type',
     'gainPercent',
     'cagr',
     'age',
+    'notes',
   ];
 
   holdingGroupings: string[] = ['None', 'Stock'];
@@ -112,18 +113,16 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
               quantity: info['total-qty'],
               averagePrice: asCurrency(costPrice),
               cmp: asCurrency(marketPrice),
-              tco: asCurrency(costPrice.times(info['total-qty']).div(1000)),
+              tco: asCurrency(costPrice.times(info['total-qty'])),
               unrealizedGain: asCurrency(
-                gain.times(new BigNumber(info['total-qty']).div(1000))
+                gain.times(new BigNumber(info['total-qty']))
               ),
               gainPercent: gainPercent,
             };
           });
 
           // summary kpi
-          let totalCost = new BigNumber(0),
-            totalGain = new BigNumber(0),
-            today = moment();
+          let today = moment();
 
           this.holdings = _.chain(stocks)
             .flatMap((stock) => {
@@ -133,13 +132,11 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
                 let costPrice = new BigNumber(h['price']),
                   marketPrice = new BigNumber(quotes[stock]),
                   qty = new BigNumber(h['qty']),
+                  tco = costPrice.times(qty),
                   gain = marketPrice.minus(costPrice).times(qty),
                   gainPercent = 0,
                   cagr = 0,
                   ageInDays = today.diff(moment(h['date']), 'days');
-
-                totalCost = totalCost.plus(costPrice.times(qty));
-                totalGain = totalGain.plus(gain);
 
                 if (h.price > 0) {
                   gainPercent = asPercent(
@@ -159,7 +156,8 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
                   quantity: h['qty'],
                   averagePrice: asCurrency(costPrice),
                   cmp: asCurrency(marketPrice),
-                  unrealizedGain: asCurrency(gain.div(1000)),
+                  tco: asCurrency(tco),
+                  unrealizedGain: asCurrency(gain),
                   notes: h['notes'],
                   type:
                     ageInDays > 365
@@ -174,11 +172,6 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
               });
             })
             .value();
-
-          this.holdingKPIs = {
-            totalCost: asCurrency(totalCost.div(1000)),
-            totalGain: asCurrency(totalGain.div(1000)),
-          };
 
           this.onGroupingChange('None');
         });
@@ -222,8 +215,9 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
       },
       summary
     );
+    console.log(summary);
     this.holdingKPIs = {
-      totalCost: asCurrency(summary.totalCost.div(1000)),
+      totalCost: asCurrency(summary.totalCost),
       totalGain: asCurrency(summary.totalGain),
     };
   }

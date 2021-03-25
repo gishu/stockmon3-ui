@@ -26,13 +26,13 @@
     <span class="spacer"></span>
     <mat-chip-list selectable="false">
       <mat-chip color="primary" selected="true">
-        TCO: {{ holdingKPIs.totalCost | currency: "INR" }} K
+        TCO: {{ holdingKPIs.totalCost / 1000 | currency: "INR" }} K
       </mat-chip>
       <mat-chip
         [color]="holdingKPIs.totalGain > 0 ? 'accent' : 'warn'"
         selected="true"
       >
-        Gain: {{ holdingKPIs.totalGain | currency: "INR" }} K
+        Gain: {{ holdingKPIs.totalGain / 1000 | currency: "INR" }} K
       </mat-chip>
       <mat-chip
         [color]="holdingKPIs.totalGain > 0 ? 'accent' : 'warn'"
@@ -77,14 +77,14 @@
       <ng-container matColumnDef="tco">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>TCO (K)</th>
         <td mat-cell *matCellDef="let row">
-          {{ row.tco | currency: "INR" }}
+          {{ row.tco / 1000 | currency: "INR" }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="unrealizedGain">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Gain (K)</th>
         <td mat-cell *matCellDef="let row">
-          {{ row.unrealizedGain | currency: "INR" }}
+          {{ row.unrealizedGain / 1000 | currency: "INR" }}
         </td>
       </ng-container>
 
@@ -96,7 +96,7 @@
       </ng-container>
 
       <ng-container matColumnDef="gainPercent">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Gain %</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Gain</th>
         <td mat-cell *matCellDef="let row">
           {{ row.gainPercent | percent: "1.2-2" }}
         </td>

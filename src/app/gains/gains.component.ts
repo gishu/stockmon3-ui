@@ -27,7 +27,7 @@ export class GainsComponent implements OnInit, AfterViewInit {
   gridData: MatTableDataSource<Gain>;
 
   gridColumns = [
-    'date',
+    'sale_date',
     'stock',
     'quantity',
     'costPrice',
@@ -91,9 +91,9 @@ export class GainsComponent implements OnInit, AfterViewInit {
       gains.reduce(
         (total, item: Gain) => total + item.qty * item.cost_price,
         0
-      ) / 1000;
+      );
     this.summaryKPIs.totalGain =
-      gains.reduce((total, item: Gain) => total + item.gain, 0) / 1000;
+      gains.reduce((total, item: Gain) => total + item.gain, 0);
   }
 
   getColorCode(row: any) {

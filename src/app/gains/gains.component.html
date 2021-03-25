@@ -14,12 +14,12 @@
     <span class="spacer"></span>
     <mat-chip-list selectable="false">
       <mat-chip color="primary" selected="true">
-        TCO: {{ summaryKPIs.totalTCO | currency: "INR" }} K
+        TCO: {{ summaryKPIs.totalTCO /1000 | currency: "INR" }} K
       </mat-chip>
       <mat-chip
         [color]="summaryKPIs.totalGain > 0 ? 'accent' : 'warn'"
         selected="true">
-        Gain: {{ summaryKPIs.totalGain | currency: "INR" }} K
+        Gain: {{ summaryKPIs.totalGain /1000 | currency: "INR" }} K
       </mat-chip>
       <mat-chip
         [color]="summaryKPIs.totalGain > 0 ? 'accent' : 'warn'"
@@ -37,7 +37,7 @@
       class="mat-elevation-z8"
       (matSortChange)="sortData($event)"
     >
-      <ng-container matColumnDef="date">
+      <ng-container matColumnDef="sale_date">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
         <td mat-cell *matCellDef="let row">{{ row.sale_date }}</td>
       </ng-container>
@@ -69,14 +69,14 @@
       <ng-container matColumnDef="TCO">
         <th mat-header-cell *matHeaderCellDef>TCO</th>
         <td mat-cell *matCellDef="let row">
-          {{ row.qty * row.cost_price | currency: "INR" }}
+          {{ row.qty * row.cost_price / 1000| currency: "INR" }} K
         </td>
       </ng-container>
 
       <ng-container matColumnDef="gain">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Gain</th>
         <td mat-cell *matCellDef="let row">
-          {{ row.gain | currency: "INR" }}
+          {{ row.gain / 1000 | currency: "INR" }} K
         </td>
       </ng-container>
 
@@ -88,14 +88,14 @@
       </ng-container>
 
       <ng-container matColumnDef="gainPercent">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Gain %</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Gain</th>
         <td mat-cell *matCellDef="let row">
           {{ row.gain_percent | percent: "1.2-2" }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="cagr">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>CAGR %</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>CAGR  </th>
         <td mat-cell *matCellDef="let row">
           {{ row.cagr | percent: "1.2-2" }}
         </td>
