@@ -25,7 +25,6 @@ import { MatSort } from '@angular/material/sort';
 export class HoldingsComponent implements OnInit, AfterViewInit {
   private _viewLoaded: boolean = false;
   private _accountId: number = -1;
-  private _year: number = -1;
 
   holdingsSummary: any;
   holdingsSummaryColumns: string[] = [
@@ -215,7 +214,7 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
       },
       summary
     );
-    console.log(summary);
+
     this.holdingKPIs = {
       totalCost: asCurrency(summary.totalCost),
       totalGain: asCurrency(summary.totalGain),
@@ -242,5 +241,9 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
         nafaa: row.cagr > 0.25,
         nuksaan: row.cagr < -0.15 && row.age > 90,
       };
+  }
+
+  exportToCsv(matTableExporter : any) {
+    matTableExporter.exportTable('csv', { fileName: 'Holdings-' + this._accountId });
   }
 }

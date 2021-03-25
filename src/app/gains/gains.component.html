@@ -27,6 +27,10 @@
         {{ summaryKPIs.totalGain / summaryKPIs.totalTCO | percent: "1.2-2" }}
       </mat-chip>
     </mat-chip-list>
+    
+    <button mat-button class="mx-tool-button" (click)="exportToCsv(exporter)">
+      <mat-icon aria-hidden="false" aria-label="Download">save_alt</mat-icon>
+    </button>
   </div>
 
   <mat-card-content>
@@ -36,6 +40,8 @@
       matSort
       class="mat-elevation-z8"
       (matSortChange)="sortData($event)"
+      matTableExporter
+      #exporter="matTableExporter"
     >
       <ng-container matColumnDef="sale_date">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
@@ -67,16 +73,16 @@
       </ng-container>
 
       <ng-container matColumnDef="TCO">
-        <th mat-header-cell *matHeaderCellDef>TCO</th>
+        <th mat-header-cell *matHeaderCellDef>TCO (K)</th>
         <td mat-cell *matCellDef="let row">
-          {{ row.qty * row.cost_price / 1000| currency: "INR" }} K
+          {{ row.qty * row.cost_price / 1000| currency: "INR" }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="gain">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Gain</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Gain (K)</th>
         <td mat-cell *matCellDef="let row">
-          {{ row.gain / 1000 | currency: "INR" }} K
+          {{ row.gain / 1000 | currency: "INR" }}
         </td>
       </ng-container>
 
@@ -87,8 +93,8 @@
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="gainPercent">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Gain</th>
+      <ng-container matColumnDef="gain_percent">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Gain %</th>
         <td mat-cell *matCellDef="let row">
           {{ row.gain_percent | percent: "1.2-2" }}
         </td>

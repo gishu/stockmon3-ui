@@ -35,11 +35,11 @@ export class GainsComponent implements OnInit, AfterViewInit {
     'TCO',
     'gain',
     'type',
-    'gainPercent',
+    'gain_percent',
     'cagr',
     'durationDays',
   ];
-  filterCriteria: string =  "";
+  filterCriteria: string = '';
 
   @Input()
   set accountId(id: number) {
@@ -76,24 +76,25 @@ export class GainsComponent implements OnInit, AfterViewInit {
 
   refreshGrid() {
     this.stockService.getGains(this._accountId, this._year).then((gains) => {
-      gains.forEach( (gain : any) => {
-        gain.type = (gain.type === "LT" ? "LONG" : "SHORT");
-      } )
+      gains.forEach((gain: any) => {
+        gain.type = gain.type === 'LT' ? 'LONG' : 'SHORT';
+      });
       this.gridData = new MatTableDataSource(gains);
       this.gridData.sort = this.sort;
-      
+
       this.refreshKpis(gains);
     });
   }
 
   refreshKpis(gains: Gain[]) {
-    this.summaryKPIs.totalTCO =
-      gains.reduce(
-        (total, item: Gain) => total + item.qty * item.cost_price,
-        0
-      );
-    this.summaryKPIs.totalGain =
-      gains.reduce((total, item: Gain) => total + item.gain, 0);
+    this.summaryKPIs.totalTCO = gains.reduce(
+      (total, item: Gain) => total + item.qty * item.cost_price,
+      0
+    );
+    this.summaryKPIs.totalGain = gains.reduce(
+      (total, item: Gain) => total + item.gain,
+      0
+    );
   }
 
   getColorCode(row: any) {
@@ -107,12 +108,15 @@ export class GainsComponent implements OnInit, AfterViewInit {
     console.log(event);
   }
 
-  onFilter(){
-
+  onFilter() {
     if (this.filterCriteria.length > 0 && this.filterCriteria.length < 3)
       return;
 
     this.gridData.filter = this.filterCriteria.trim().toLowerCase();
     this.refreshKpis(this.gridData.filteredData);
+  }
+
+  exportToCsv(matTableExporter : any) {
+    matTableExporter.exportTable('csv', { fileName: 'Gains' + this._accountId + "-" + this._year });
   }
 }
