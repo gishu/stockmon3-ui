@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  stockmon3_service_base_url: "http://localhost:8080"
+  stockmon3_service_base_url: "st3api"
 };
 
 /*
