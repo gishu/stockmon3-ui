@@ -39,10 +39,10 @@ export class StockmonService {
   }
 
   getQuotes(symbols: string[]) {
-    let url = environment.stockmon3_service_base_url + `/quotes`;
+    let url = environment.stockmon3_service_base_url + `/quotes?symbols=` + encodeURIComponent(symbols.join(","));
 
     return this.http
-      .post(url, { symbols: symbols })
+      .get(url)
       .toPromise()
       .then((res: any) => {
         return res.quotes;
