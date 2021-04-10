@@ -28,7 +28,7 @@ export class DashboardComponent implements OnInit {
   constructor(private stockService: StockmonService) {}
 
   ngOnInit(): void {
-    this.years = [2020, 2019, 2018, 2017, 2016];
+    this.years = [2021, 2020, 2019, 2018, 2017, 2016];
     this.accounts = [3, 2, 1];
     this.selectedYear = this.years[0];
     this.selectedAccountId = this.accounts[0];
