@@ -1,0 +1,73 @@
+<mat-card>
+  <div class="mat-card-header">
+    <mat-form-field appearance="fill">
+      <mat-label>Group by..</mat-label>
+      <mat-select
+        [(ngModel)]="selectedGrouping"
+        (selectionChange)="onGroupingChange($event.value)"
+      >
+        <mat-option *ngFor="let clause of holdingGroupings" [value]="clause">{{
+          clause
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Filter</mat-label>
+      <input
+        matInput
+        type="text"
+        [(ngModel)]="filterCriteria"
+        (keyup)="onFilter()"
+        placeholder="Enter filter criteria..."
+      />
+    </mat-form-field>
+
+    <span class="spacer"></span>
+    <mat-chip-list selectable="false">
+      <mat-chip color="primary" selected="true">
+        {{ summaryKPIs.totalDivs | currency: "INR" }} K
+      </mat-chip>
+    </mat-chip-list>
+
+    <button mat-button class="mx-tool-button" (click)="exportToCsv(exporter)">
+      <mat-icon aria-hidden="false" aria-label="Download">save_alt</mat-icon>
+    </button>
+  </div>
+
+  <mat-card-content>
+    <table
+      mat-table
+      [dataSource]="gridData"
+      matSort
+      class="mat-elevation-z8"
+      matTableExporter
+      #exporter="matTableExporter"
+    >
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+        <td mat-cell *matCellDef="let row">{{ row.date }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="stock">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Stock</th>
+        <td mat-cell *matCellDef="let row">{{ row.stock }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.amount | number: "1.2-2" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="notes">
+        <th mat-header-cell *matHeaderCellDef>Notes</th>
+        <td mat-cell *matCellDef="let row">{{ row.notes }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="gridColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: gridColumns"></tr>
+    </table>
+  </mat-card-content>
+</mat-card>
