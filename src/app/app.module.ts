@@ -20,6 +20,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { FormsModule } from '@angular/forms';
 import { HoldingsComponent } from './holdings/holdings.component';
 import { GainsComponent } from './gains/gains.component';
+import { DividendsComponent } from './dividends/dividends.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { GainsComponent } from './gains/gains.component';
     DashboardComponent,
     HoldingsComponent,
     GainsComponent,
+    DividendsComponent,
   ],
   imports: [
     BrowserModule,

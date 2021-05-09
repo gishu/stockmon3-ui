@@ -1,0 +1,33 @@
+/* width */
+.mat-table {
+  width: 100%;
+}
+
+/* center column headers */
+th.mat-header-cell {
+  text-align: center;
+  justify-content: center;
+}
+
+:host ::ng-deep .mat-sort-header-container {
+  display: flex;
+  justify-content: center;
+}
+
+/* space out the columns */
+td.mat-cell {
+  padding: 0px 10px;
+}
+
+/* right align numeric columns */
+.mat-cell.mat-column-amount {
+  text-align: right;
+}
+
+/* space out the columns */
+td.mat-cell {
+  padding: 0px 10px;
+}
+tr.mat-row {
+  height: 32px;
+}

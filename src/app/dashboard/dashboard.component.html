@@ -36,6 +36,14 @@
           >
           </mx-gains>
         </mat-tab>
+
+        <mat-tab label="Dividends">
+          <mx-dividends
+            [accountId]="this.selectedAccountId"
+            [year]="this.selectedYear"
+          >
+          </mx-dividends>
+        </mat-tab>
       </mat-tab-group>
     </div>
   </div>
