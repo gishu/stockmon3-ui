@@ -24,6 +24,16 @@ td.mat-cell {
   text-align: right;
 }
 
+/* right align the chips */
+.spacer {
+  flex: 1 0 auto;
+}
+
+/* space out the chips and the grid */
+div.mat-card-header {
+  margin: 0 0 10px 0;
+}
+
 /* space out the columns */
 td.mat-cell {
   padding: 0px 10px;

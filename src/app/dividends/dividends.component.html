@@ -1,5 +1,5 @@
 <mat-card>
-  <!-- <div class="mat-card-header">
+  <div class="mat-card-header">
       <mat-form-field appearance="fill">
         <mat-label>Filter</mat-label>
         <input
@@ -11,27 +11,17 @@
         />
       </mat-form-field>
   
-      <span class="spacer"></span>
+       <span class="spacer"></span>
       <mat-chip-list selectable="false">
         <mat-chip color="primary" selected="true">
-          TCO: {{ summaryKPIs.totalTCO /1000 | currency: "INR" }} K
+          TCO: {{ summaryKPIs.totalDivs | currency: "INR" }} K
         </mat-chip>
-        <mat-chip
-          [color]="summaryKPIs.totalGain > 0 ? 'accent' : 'warn'"
-          selected="true">
-          Gain: {{ summaryKPIs.totalGain /1000 | currency: "INR" }} K
-        </mat-chip>
-        <mat-chip
-          [color]="summaryKPIs.totalGain > 0 ? 'accent' : 'warn'"
-          selected="true">
-          {{ summaryKPIs.totalGain / summaryKPIs.totalTCO | percent: "1.2-2" }}
-        </mat-chip>
-      </mat-chip-list>
+      </mat-chip-list> 
       
       <button mat-button class="mx-tool-button" (click)="exportToCsv(exporter)">
         <mat-icon aria-hidden="false" aria-label="Download">save_alt</mat-icon>
       </button>
-    </div> -->
+    </div>
 
   <mat-card-content>
     <table

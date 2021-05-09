@@ -24,6 +24,10 @@ export class DividendsComponent implements AfterViewInit {
     'notes'
   ];
 
+  filterCriteria: string = '';
+  summaryKPIs: any = {};
+
+
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private stockService: StockmonService) { }
@@ -58,13 +62,29 @@ export class DividendsComponent implements AfterViewInit {
 
   refreshGrid() {
     this.stockService.getDividends(this._accountId, this._year).then((dividends) => {
-      // gains.forEach((gain: any) => {
-      //   gain.type = gain.type === 'LT' ? 'LONG' : 'SHORT';
-      // });
       this.gridData = new MatTableDataSource(dividends);
       this.gridData.sort = this.sort;
 
-    //   this.refreshKpis(gains);
+      this.refreshKpis(dividends);
     });
+  }
+
+  onFilter() {
+    if (this.filterCriteria.length > 0 && this.filterCriteria.length < 3)
+      return;
+
+    this.gridData.filter = this.filterCriteria.trim().toLowerCase();
+    this.refreshKpis(this.gridData.filteredData);
+  }
+
+  exportToCsv(matTableExporter : any) {
+    matTableExporter.exportTable('csv', { fileName: 'Divs' + this._accountId + "-" + this._year });
+  }
+
+  refreshKpis(divs: Dividend[]) {
+    this.summaryKPIs.totalDivs = divs.reduce(
+      (total, item: Dividend) => total + item.amount,
+      0
+    );
   }
 }
