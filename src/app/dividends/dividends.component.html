@@ -1,27 +1,39 @@
 <mat-card>
   <div class="mat-card-header">
-      <mat-form-field appearance="fill">
-        <mat-label>Filter</mat-label>
-        <input
-          matInput
-          type="text"
-          [(ngModel)]="filterCriteria"
-          (keyup)="onFilter()"
-          placeholder="Enter filter criteria..."
-        />
-      </mat-form-field>
-  
-       <span class="spacer"></span>
-      <mat-chip-list selectable="false">
-        <mat-chip color="primary" selected="true">
-          TCO: {{ summaryKPIs.totalDivs | currency: "INR" }} K
-        </mat-chip>
-      </mat-chip-list> 
-      
-      <button mat-button class="mx-tool-button" (click)="exportToCsv(exporter)">
-        <mat-icon aria-hidden="false" aria-label="Download">save_alt</mat-icon>
-      </button>
-    </div>
+    <mat-form-field appearance="fill">
+      <mat-label>Group by..</mat-label>
+      <mat-select
+        [(ngModel)]="selectedGrouping"
+        (selectionChange)="onGroupingChange($event.value)"
+      >
+        <mat-option *ngFor="let clause of holdingGroupings" [value]="clause">{{
+          clause
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Filter</mat-label>
+      <input
+        matInput
+        type="text"
+        [(ngModel)]="filterCriteria"
+        (keyup)="onFilter()"
+        placeholder="Enter filter criteria..."
+      />
+    </mat-form-field>
+
+    <span class="spacer"></span>
+    <mat-chip-list selectable="false">
+      <mat-chip color="primary" selected="true">
+        {{ summaryKPIs.totalDivs | currency: "INR" }} K
+      </mat-chip>
+    </mat-chip-list>
+
+    <button mat-button class="mx-tool-button" (click)="exportToCsv(exporter)">
+      <mat-icon aria-hidden="false" aria-label="Download">save_alt</mat-icon>
+    </button>
+  </div>
 
   <mat-card-content>
     <table

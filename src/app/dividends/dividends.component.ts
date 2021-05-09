@@ -3,11 +3,12 @@ import { StockmonService } from '../stockmon.service';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Dividend } from '../viewModel/dividend';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'mx-dividends',
   templateUrl: './dividends.component.html',
-  styleUrls: ['./dividends.component.css']
+  styleUrls: ['./dividends.component.css'],
 })
 export class DividendsComponent implements AfterViewInit {
   private _accountId: number = -1;
@@ -15,29 +16,30 @@ export class DividendsComponent implements AfterViewInit {
 
   private _viewLoaded: boolean = false;
 
-  gridData: MatTableDataSource<Dividend>;
+  gridData: any;
 
-  gridColumns = [
-    'date',
-    'stock',
-    'amount',
-    'notes'
-  ];
+  gridColumns: string[];
+  columns = ['date', 'stock', 'amount', 'notes'];
+  groupedByStockColumns: string[] = ['stock', 'amount'];
+
+  dividendsGroupedByStock: any[];
+  dividends: Dividend[];
 
   filterCriteria: string = '';
   summaryKPIs: any = {};
 
+  holdingGroupings: string[] = ['None', 'Stock'];
+  selectedGrouping = this.holdingGroupings[0];
 
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private stockService: StockmonService) { }
+  constructor(private stockService: StockmonService) {}
 
   ngAfterViewInit(): void {
     this._viewLoaded = true;
 
     this.refreshGrid();
   }
-
 
   @Input()
   set accountId(id: number) {
@@ -61,12 +63,24 @@ export class DividendsComponent implements AfterViewInit {
   }
 
   refreshGrid() {
-    this.stockService.getDividends(this._accountId, this._year).then((dividends) => {
-      this.gridData = new MatTableDataSource(dividends);
-      this.gridData.sort = this.sort;
+    this.stockService
+      .getDividends(this._accountId, this._year)
+      .then((dividends) => {
+        this.dividends = dividends;
 
-      this.refreshKpis(dividends);
-    });
+        this.dividendsGroupedByStock = _.chain(dividends)
+          .groupBy('stock')
+          .map((divs, stock) => {
+            let totalAmount = _.chain(divs)
+              .reduce((sum, item) => sum + item.amount, 0)
+              .value();
+
+            return { stock: stock, amount: totalAmount };
+          })
+          .value();
+
+        this.onGroupingChange('None');
+      });
   }
 
   onFilter() {
@@ -77,8 +91,10 @@ export class DividendsComponent implements AfterViewInit {
     this.refreshKpis(this.gridData.filteredData);
   }
 
-  exportToCsv(matTableExporter : any) {
-    matTableExporter.exportTable('csv', { fileName: 'Divs' + this._accountId + "-" + this._year });
+  exportToCsv(matTableExporter: any) {
+    matTableExporter.exportTable('csv', {
+      fileName: 'Divs' + this._accountId + '-' + this._year,
+    });
   }
 
   refreshKpis(divs: Dividend[]) {
@@ -86,5 +102,19 @@ export class DividendsComponent implements AfterViewInit {
       (total, item: Dividend) => total + item.amount,
       0
     );
+  }
+
+  onGroupingChange(grouping: string) {
+    this.selectedGrouping = grouping;
+
+    if (grouping === 'Stock') {
+      this.gridData = new MatTableDataSource(this.dividendsGroupedByStock);
+      this.gridColumns = this.groupedByStockColumns;
+    } else {
+      this.gridData = new MatTableDataSource(this.dividends);
+      this.gridColumns = this.columns;
+    }
+    this.gridData.sort = this.sort;
+    this.onFilter();
   }
 }
