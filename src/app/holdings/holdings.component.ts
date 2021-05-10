@@ -28,6 +28,7 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
 
   holdingsSummary: any;
   holdingsSummaryColumns: string[] = [
+    'category',
     'stock',
     'quantity',
     'costPrice',
@@ -38,6 +39,7 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
   ];
   holdingsColumns: string[] = [
     'date',
+    'category',
     'stock',
     'quantity',
     'costPrice',
@@ -97,7 +99,8 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
           this.holdingsGroupedByStock = _.map(stocks, (stock) => {
             let info = holdings[stock],
               costPrice = new BigNumber(info['avg-price']),
-              marketPrice = new BigNumber(quotes[stock]),
+              marketPrice = new BigNumber(quotes[stock].price),
+              category = quotes[stock].type,
               gain = marketPrice.minus(costPrice),
               gainPercent = 0;
 
@@ -108,6 +111,7 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
             }
 
             return {
+              category: category,
               stock: stock,
               quantity: info['total-qty'],
               averagePrice: asCurrency(costPrice),
@@ -129,7 +133,8 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
 
               return _.map(stockInfo['buys'], (h) => {
                 let costPrice = new BigNumber(h['price']),
-                  marketPrice = new BigNumber(quotes[stock]),
+                  marketPrice = new BigNumber(quotes[stock].price),
+                  category = quotes[stock].type,
                   qty = new BigNumber(h['qty']),
                   tco = costPrice.times(qty),
                   gain = marketPrice.minus(costPrice).times(qty),
@@ -139,18 +144,19 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
 
                 if (h.price > 0) {
                   gainPercent = asPercent(
-                    new BigNumber(quotes[stock]).minus(h.price).div(h.price)
+                    marketPrice.minus(h.price).div(h.price)
                   );
                 }
 
                 if (h.price > 0 && ageInDays > 30) {
                   cagr = asPercent(
-                    this._getCagr(quotes[stock], h.price, ageInDays / 365)
+                    this._getCagr(quotes[stock].price, h.price, ageInDays / 365)
                   );
                 }
 
                 return {
                   date: h['date'],
+                  category: category,
                   stock: stock,
                   quantity: h['qty'],
                   averagePrice: asCurrency(costPrice),

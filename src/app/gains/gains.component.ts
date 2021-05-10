@@ -82,7 +82,7 @@ export class GainsComponent implements OnInit, AfterViewInit {
       this.gridData = new MatTableDataSource(gains);
       this.gridData.sort = this.sort;
 
-      this.refreshKpis(gains);
+      this.onFilter();
     });
   }
 
