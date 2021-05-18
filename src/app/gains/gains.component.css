@@ -26,7 +26,7 @@ td.mat-cell {
 .mat-cell.mat-column-salePrice,
 .mat-cell.mat-column-TCO,
 .mat-cell.mat-column-gain,
-.mat-cell.mat-column-gainPercent,
+.mat-cell.mat-column-gain_percent,
 .mat-cell.mat-column-cagr,
 .mat-cell.mat-column-durationDays {
   text-align: right;

@@ -41,8 +41,3 @@ td.mat-cell {
 tr.mat-row {
   height: 32px;
 }
-
-/* space out card header fields */
-.mat-form-field {
-  padding: 0px 20px 0px 0px;
-}
