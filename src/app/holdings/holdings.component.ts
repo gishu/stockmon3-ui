@@ -26,47 +26,50 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
   private _viewLoaded: boolean = false;
   private _accountId: number = -1;
 
-  holdingsSummary: any;
-  holdingsSummaryColumns: string[] = [
-    'category',
-    'stock',
-    'quantity',
-    'costPrice',
-    'cmp',
-    'tco',
-    'unrealizedGain',
-    'gainPercent',
-  ];
-  holdingsColumns: string[] = [
-    'date',
-    'category',
-    'stock',
-    'quantity',
-    'costPrice',
-    'cmp',
-    'tco',
-    'unrealizedGain',
-    'type',
-    'gainPercent',
-    'cagr',
-    'age',
-    'notes',
-  ];
+  gridData: MatTableDataSource<any>;
+  gridColumns: string[];
 
-  holdingGroupings: string[] = ['None', 'Stock'];
-  selectedGrouping = this.holdingGroupings[0];
+  columns : any = {
+    None:  [
+      'date',
+      'category',
+      'stock',
+      'quantity',
+      'costPrice',
+      'cmp',
+      'tco',
+      'unrealizedGain',
+      'type',
+      'gainPercent',
+      'cagr',
+      'age',
+      'notes',
+    ],
+    Stock:[
+      'category',
+      'stock',
+      'quantity',
+      'costPrice',
+      'cmp',
+      'tco',
+      'unrealizedGain',
+      'gainPercent',
+    ],
+  };
+  filterCriteria: string = '';
+  groups: string[] = ['None', 'Stock'];
 
-  gridColumns: string[] = [];
-  gridData: any;
+  _selectedGroup = this.groups[0];
+  gridDataSets: any;
+
+
   @ViewChild(MatSort) sort: MatSort;
 
   holdingKPIs: { totalCost: number; totalGain: number } = {
     totalCost: 1,
     totalGain: 0,
   };
-  holdingsGroupedByStock: HoldingSummary[] = [];
-  holdings: Holding[] = [];
-  filterCriteria: string = '';
+
 
   @Input()
   set accountId(id: number) {
@@ -93,10 +96,12 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
     this.stockService
       .getHoldings(this._accountId)
       .then((holdings: any) => {
-        let stocks = _.chain(holdings).keys().sort().value();
+        
+        let stocks = this.getStockSymbolsOrderedByName(holdings);
+        this.gridDataSets = {};
 
         this.stockService.getQuotes(stocks).then((quotes: any) => {
-          this.holdingsGroupedByStock = _.map(stocks, (stock) => {
+          this.gridDataSets['Stock'] = _.map(stocks, (stock) => {
             let info = holdings[stock],
               costPrice = new BigNumber(info['avg-price']),
               marketPrice = new BigNumber(quotes[stock].price),
@@ -127,7 +132,7 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
           // summary kpi
           let today = moment();
 
-          this.holdings = _.chain(stocks)
+          this.gridDataSets['None'] = _.chain(stocks)
             .flatMap((stock) => {
               let stockInfo = holdings[stock];
 
@@ -178,34 +183,33 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
             })
             .value();
 
-          this.onGroupingChange('None');
+          this.onGroupChanged(this._selectedGroup);
         });
       })
       .catch((err) => console.log);
   }
 
-  onGroupingChange(grouping: string) {
-    this.selectedGrouping = grouping;
-
-    if (grouping === 'Stock') {
-      this.gridData = new MatTableDataSource(this.holdingsGroupedByStock);
-      this.gridColumns = this.holdingsSummaryColumns;
-    } else {
-      this.gridData = new MatTableDataSource(this.holdings);
-      this.gridColumns = this.holdingsColumns;
-    }
-    this.gridData.sort = this.sort;
-    this.onFilter();
+  private getStockSymbolsOrderedByName(holdings: any) {
+    return _.chain(holdings).keys().sort().value();
   }
 
-  onFilter() {
-    if (this.filterCriteria.length > 0 && this.filterCriteria.length < 3)
-      return;
+  onGroupChanged(selectedGrouping: string) {
 
-    this.gridData.filter = this.filterCriteria.trim().toLowerCase();
+    this._selectedGroup = selectedGrouping;
+    this.gridColumns = this.columns[selectedGrouping];
+    
+    this.gridData = new MatTableDataSource(this.gridDataSets[selectedGrouping]);
+    this.gridData.sort = this.sort;
+    
+    this.onFilterChanged(this.filterCriteria);
+  }
+  
+  onFilterChanged(filterCriteria: any) {
+    this.filterCriteria = filterCriteria;
+    this.gridData.filter = filterCriteria.trim().toLowerCase();
     this.refreshKpis(this.gridData.filteredData);
   }
-
+ 
   refreshKpis(rows: any[]) {
     let summary = { totalCost: new BigNumber(0), totalGain: new BigNumber(0) };
 
@@ -237,7 +241,7 @@ export class HoldingsComponent implements OnInit, AfterViewInit {
   }
 
   getColorCode(row: any) {
-    if (this.selectedGrouping === 'Stock')
+    if (this._selectedGroup === 'Stock')
       return {
         nafaa: row.gainPercent > 0.5,
         nuksaan: row.gainPercent < -0.25,

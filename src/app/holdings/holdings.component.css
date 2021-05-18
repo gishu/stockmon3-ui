@@ -64,9 +64,3 @@ div.mat-card-header {
 .mat-row.nafaa > .mat-cell {
   color: lime;
 }
-
-
-/* space out card header fields */
-.mat-form-field {
-  padding: 0px 20px 0px 0px;
-}

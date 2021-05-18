@@ -21,6 +21,7 @@ import { FormsModule } from '@angular/forms';
 import { HoldingsComponent } from './holdings/holdings.component';
 import { GainsComponent } from './gains/gains.component';
 import { DividendsComponent } from './dividends/dividends.component';
+import { GridActionsComponent } from './grid-actions/grid-actions.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { DividendsComponent } from './dividends/dividends.component';
     HoldingsComponent,
     GainsComponent,
     DividendsComponent,
+    GridActionsComponent,
   ],
   imports: [
     BrowserModule,

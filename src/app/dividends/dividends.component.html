@@ -1,27 +1,10 @@
 <mat-card>
   <div class="mat-card-header">
-    <mat-form-field appearance="fill">
-      <mat-label>Group by..</mat-label>
-      <mat-select
-        [(ngModel)]="selectedGrouping"
-        (selectionChange)="onGroupingChange($event.value)"
-      >
-        <mat-option *ngFor="let clause of holdingGroupings" [value]="clause">{{
-          clause
-        }}</mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Filter</mat-label>
-      <input
-        matInput
-        type="text"
-        [(ngModel)]="filterCriteria"
-        (keyup)="onFilter()"
-        placeholder="Enter filter criteria..."
-      />
-    </mat-form-field>
+    <mx-grid-actions
+      [groups]="groups"
+      (onGroupingChanged)="onGroupChanged($event)"
+      (onFilterChanged)="onFilterChanged($event)"
+    ></mx-grid-actions>
 
     <span class="spacer"></span>
     <mat-chip-list selectable="false">

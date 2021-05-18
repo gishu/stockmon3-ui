@@ -11,25 +11,28 @@ import * as _ from 'lodash';
   styleUrls: ['./dividends.component.css'],
 })
 export class DividendsComponent implements AfterViewInit {
+
   private _accountId: number = -1;
   private _year: number = -1;
 
   private _viewLoaded: boolean = false;
 
   gridData: any;
-
   gridColumns: string[];
-  columns = ['date', 'stock', 'amount', 'notes'];
-  groupedByStockColumns: string[] = ['stock', 'amount'];
 
-  dividendsGroupedByStock: any[];
-  dividends: Dividend[];
+  private columns : any = {
+    None: ['date', 'stock', 'amount', 'notes'],
+    Stock: ['stock', 'amount'],
+  };
+  private gridDataSets : any = {};
 
+  groups = ['None', 'Stock'];
+
+  selectedGroup = this.groups[0];
   filterCriteria: string = '';
+
   summaryKPIs: any = {};
 
-  holdingGroupings: string[] = ['None', 'Stock'];
-  selectedGrouping = this.holdingGroupings[0];
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -62,13 +65,30 @@ export class DividendsComponent implements AfterViewInit {
     this.refreshGrid();
   }
 
+  onGroupChanged(selectedGrouping: string) {
+
+    this.selectedGroup = selectedGrouping;
+
+    this.gridColumns = this.columns[selectedGrouping];
+    this.gridData = new MatTableDataSource(this.gridDataSets[selectedGrouping]);
+    this.gridData.sort = this.sort;
+    
+    this.onFilterChanged(this.filterCriteria);
+  }
+
+  onFilterChanged(filterCriteria: any) {
+    this.filterCriteria = filterCriteria;
+    this.gridData.filter = filterCriteria.trim().toLowerCase();
+    this.refreshKpis(this.gridData.filteredData);
+  }
+
   refreshGrid() {
     this.stockService
       .getDividends(this._accountId, this._year)
       .then((dividends) => {
-        this.dividends = dividends;
+        this.gridDataSets['None'] = dividends;
 
-        this.dividendsGroupedByStock = _.chain(dividends)
+        this.gridDataSets['Stock'] = _.chain(dividends)
           .groupBy('stock')
           .map((divs, stock) => {
             let totalAmount = _.chain(divs)
@@ -79,22 +99,8 @@ export class DividendsComponent implements AfterViewInit {
           })
           .value();
 
-        this.onGroupingChange('None');
+          this.onGroupChanged(this.selectedGroup);
       });
-  }
-
-  onFilter() {
-    if (this.filterCriteria.length > 0 && this.filterCriteria.length < 3)
-      return;
-
-    this.gridData.filter = this.filterCriteria.trim().toLowerCase();
-    this.refreshKpis(this.gridData.filteredData);
-  }
-
-  exportToCsv(matTableExporter: any) {
-    matTableExporter.exportTable('csv', {
-      fileName: 'Divs' + this._accountId + '-' + this._year,
-    });
   }
 
   refreshKpis(divs: Dividend[]) {
@@ -104,17 +110,9 @@ export class DividendsComponent implements AfterViewInit {
     );
   }
 
-  onGroupingChange(grouping: string) {
-    this.selectedGrouping = grouping;
-
-    if (grouping === 'Stock') {
-      this.gridData = new MatTableDataSource(this.dividendsGroupedByStock);
-      this.gridColumns = this.groupedByStockColumns;
-    } else {
-      this.gridData = new MatTableDataSource(this.dividends);
-      this.gridColumns = this.columns;
-    }
-    this.gridData.sort = this.sort;
-    this.onFilter();
+  exportToCsv(matTableExporter: any) {
+    matTableExporter.exportTable('csv', {
+      fileName: 'Divs' + this._accountId + '-' + this._year,
+    });
   }
 }
