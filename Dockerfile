@@ -1,12 +1,12 @@
-FROM node:15.12.0-alpine3.10 as builder
+FROM node:16-alpine3.11 as builder
 
 RUN mkdir -p /app
 WORKDIR /app
 COPY package.json . 
 RUN npm install
-RUN npm install --save @angular/cli
+RUN npm install -g @angular/cli
 COPY . . 
-RUN npm run build --prod
+RUN ng build --configuration production
 
 # Runtime
 FROM nginx:1.19.8-alpine
