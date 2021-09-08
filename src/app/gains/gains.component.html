@@ -77,9 +77,9 @@
       </ng-container>
 
       <ng-container matColumnDef="gain">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Gain (K)</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Gain</th>
         <td mat-cell *matCellDef="let row">
-          {{ row.gain / 1000 | currency: "INR" }}
+          {{ row.gain | currency: "INR" }}
         </td>
       </ng-container>
 
