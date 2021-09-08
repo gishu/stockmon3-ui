@@ -55,22 +55,13 @@ export class GainsComponent implements OnInit, AfterViewInit {
   @Input()
   set accountId(id: number) {
     this._accountId = id;
-
-    if (!this._viewLoaded) {
-      return;
-    }
-
-    this.refreshGrid();
   }
 
   @Input()
   set year(year: number) {
     this._year = year;
-    if (!this._viewLoaded) {
-      return;
-    }
-
-    this.refreshGrid();
+    if (this._year > 1981)
+      this.refreshGrid();
   }
 
   @ViewChild(MatSort) sort: MatSort;
@@ -80,9 +71,7 @@ export class GainsComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-    this._viewLoaded = true;
-
-    this.refreshGrid();
+    
   }
 
   refreshGrid() {
@@ -116,6 +105,8 @@ export class GainsComponent implements OnInit, AfterViewInit {
 
       this.gridDataSets = { None: gains, Stock: gainsGroupedByStock };
       this.onGroupChanged(this._selectedGroup);
+    }).catch(err => {
+      console.log(err);
     });
   }
  

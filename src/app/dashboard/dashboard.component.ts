@@ -28,10 +28,10 @@ export class DashboardComponent implements OnInit {
   constructor(private stockService: StockmonService) {}
 
   ngOnInit(): void {
-    this.years = [2021, 2022, 2020, 2019, 2018, 2017, 2016];
-    this.accounts = [3, 4, 2, 1];
-    this.selectedYear = this.years[0];
+    
+    this.accounts = [3, 2, 1];
     this.selectedAccountId = this.accounts[0];
+    this.getYears(this.selectedAccountId);
   }
 
   refreshSummary(gains: Gain[]) {
@@ -42,5 +42,15 @@ export class DashboardComponent implements OnInit {
       ) / 1000;
     this.totalGain =
       gains.reduce((total, item: Gain) => total + item.gain, 0) / 1000;
+  }
+
+  getYears(accountId : any){
+    this.stockService.getYearsWithTradesFor(accountId).then((years: number[])  => {
+      this.years = years;
+      if (this.years.length > 0){
+        this.selectedYear = this.years[0];
+      }
+    })
+    
   }
 }

@@ -39,30 +39,20 @@ export class DividendsComponent implements AfterViewInit {
   constructor(private stockService: StockmonService) {}
 
   ngAfterViewInit(): void {
-    this._viewLoaded = true;
-
-    this.refreshGrid();
+    
   }
 
   @Input()
   set accountId(id: number) {
     this._accountId = id;
-
-    if (!this._viewLoaded) {
-      return;
-    }
-
-    this.refreshGrid();
   }
 
   @Input()
   set year(year: number) {
     this._year = year;
-    if (!this._viewLoaded) {
-      return;
-    }
 
-    this.refreshGrid();
+    if (this._year > 1981)
+      this.refreshGrid();
   }
 
   onGroupChanged(selectedGrouping: string) {
