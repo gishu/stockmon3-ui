@@ -66,6 +66,15 @@ export class StockmonService {
       });
   }
 
+  getAccounts(){
+    let url = environment.stockmon3_service_base_url + '/accounts';
+    return this.http.get(url)
+      .toPromise()
+      .then( (response:any) => {
+        return response.data;
+      });;
+  }
+
   getYearsWithTradesFor(accountId : number) {
     let url =
       environment.stockmon3_service_base_url +

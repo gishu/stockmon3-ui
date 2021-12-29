@@ -4,8 +4,8 @@
       <mat-form-field appearance="fill">
         <mat-label>Select account</mat-label>
         <mat-select [(ngModel)]="selectedAccountId"  (selectionChange)="getYears($event.value)">
-          <mat-option *ngFor="let account of accounts" [value]="account">
-            {{ account }}
+          <mat-option *ngFor="let account of accounts" [value]="account.id">
+            {{ account.desc }}
           </mat-option>
         </mat-select>
       </mat-form-field>

@@ -28,10 +28,14 @@ export class DashboardComponent implements OnInit {
   constructor(private stockService: StockmonService) {}
 
   ngOnInit(): void {
-    
-    this.accounts = [3, 2, 1];
-    this.selectedAccountId = this.accounts[0];
-    this.getYears(this.selectedAccountId);
+
+    this.stockService.getAccounts().then(  (data : any) => {
+      this.accounts = data;
+      if (this.accounts.length > 0){
+        this.selectedAccountId = this.accounts[0].id;
+        this.getYears(this.selectedAccountId);
+      }
+    } );
   }
 
   refreshSummary(gains: Gain[]) {
@@ -51,6 +55,6 @@ export class DashboardComponent implements OnInit {
         this.selectedYear = this.years[0];
       }
     })
-    
+
   }
 }
